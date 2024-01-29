@@ -1,0 +1,152 @@
+{% extends 'base.html' %} {% load static %} {% load humanize %} {% block pageContent %}
+<section class="py-4">
+    <div class="container">
+        <h3 class="fw-bolder text-center">Daily Transaction Report</h3>
+        <center>
+            <hr class="bg-primary opacity-100" style="height:3px" width="5%">
+        </center>
+        <div class="card rounded-0 mb-3">
+            <div class="card-header py-1">
+                <div class="card-title mb-0">Filter Report</div>
+            </div>
+            <div class="card-body">
+                <form action="" id="filter-form">
+                    <div class="row align-items-end">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <label for="date" class="control-label">Choose Date</label>
+                                <input type="date" class="form-control form-control-sm rounded-0" id="date" value="{{date|date:'Y-m-d'}}" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <div class="mb-3">
+                                <button class="btn btn-sm btn-primary bg-gradient bg-primary rounded-0"><i class="fa fa-filter"></i> Filter</button>
+                                <button class="btn btn-sm btn-success bg-gradient bg-success rounded-0" type="button" id="print"><i class="fa fa-print"></i> Print</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card rounded-0 shadow">
+            <div class="card-body">
+                <div class="container-fluid">
+                    <table class="table table-bordered table-striped" id="laundry-tbl">
+                        <colgroup>
+                            <col width="5%">
+                            <col width="20%">
+                            <col width="25%">
+                            <col width="30%">
+                            <col width="20%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Date Added</th>
+                                <th class="text-center">Code</th>
+                                <th class="text-center">Client</th>
+                                <th class="text-center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for laundry in laundries %}
+                            <tr>
+                                <td class="text-center">{{ forloop.counter }}</td>
+                                <td>{{ laundry.date_added|date:"Y-m-d h:i A"}}</td>
+                                <td>
+                                    <div class="lh-1">
+                                        <div>{{ laundry.code}}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="lh-1">
+                                        <div>{{ laundry.client}}</div>
+                                        <div>{{ laundry.contact}}</div>
+                                    </div>
+                                </td>
+                                <td class="text-end">{{laundry.total_amount|floatformat:2|intcomma}}</td>
+                            </tr>
+                            {% endfor %} {% if not laundries %}
+                            <tr>
+                                <th class="text-center" colspan="5">No records found.</th>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" class="text-center">Total Sales</th>
+                                <th class="text-end fw-bolder">{{grand_total|floatformat:2|intcomma}}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<noscript id="print-header">
+    <div>
+        <style>
+            html{
+                min-height: unset !important;
+            }
+        </style>
+        <div class="d-flex w-100">
+            <div class="col-2 text-center">
+                <img src="{{system_host}}{% static 'assets/default/img/logo.jpg' %}" style="width:4em;height:4em;object-fit:cover;object-position:center center" alt="" class="rounded-circle p-0 img-thumbnail">
+            </div>
+            <div class="col-8">
+                <div class="lh-1">
+                    <h4 class="text-center mb-0 fw-bolder">{{system_name}}</h4>
+                    <h5 class="text-center mb-0 fw-bolder">Daily Transaction Report</h5>
+                    <div class="text-center mb-0 fw-bolder">as of</div>
+                    <h5 class="text-center mb-0 fw-bolder">{{date|date:"F d, Y"}}</h5>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</noscript> {% endblock pageContent %} {% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#laundry-tbl').find('td, th').addClass('px-2 py-1 align-middle')
+        $('#filter-form').submit(function(e) {
+            e.preventDefault()
+            location.href = '{% url "daily-report" %}/' + $('#date').val()
+        })
+        $('#print').click(function() {
+            console.log('print')
+            var h = $('head').clone()
+            h.find('title').text("Daily Transaction Report - Print Details")
+            h.find('link').each(function() {
+                if ($(this).is('[href]')) {
+                    $(this).attr('href', "{{system_host}}" + $(this).attr('href'))
+                }
+            })
+            h.find('script').each(function() {
+                if ($(this).is('[src]')) {
+                    $(this).attr('src', "{{system_host}}" + $(this).attr('src'))
+                }
+            })
+            var ph = $($('noscript#print-header').html()).clone()
+            var el = "";
+            el += $('#laundry-tbl').clone()[0].outerHTML
+
+
+            var nw = window.open("", "_blank", "width=" + ($(window).width() * .8) + ", left=" + ($(window).width() * .1) + "height=" + ($(window).height() * .8) + ", top=" + ($(window).height() * .1) + "")
+            nw.document.querySelector('head').innerHTML = h.html()
+            nw.document.querySelector('body').innerHTML = ph[0].outerHTML
+            nw.document.querySelector('body').innerHTML += el
+            nw.document.close()
+            start_loader()
+            setTimeout(() => {
+                nw.print()
+                setTimeout(() => {
+                    nw.close()
+                    end_loader()
+                }, 200)
+            }, 300)
+        })
+    })
+</script>
+{% endblock ScriptBlock %}

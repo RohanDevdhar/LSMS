@@ -1,0 +1,279 @@
+{% extends 'base.html' %}{% load static %}{% load humanize %}{% block pageContent %}
+<style>
+    #laundry-img {
+        max-width: 100%;
+        max-height: 10em;
+        object-fit: scale-down;
+        object-position: center center;
+    }
+</style>
+<section class="py-4">
+    <div class="container">
+        <div class="card rounded-0 mb-3">
+            <div class="card-header py-1">
+                <div class="d-flex w-100">
+                    <div class="col-auto flex-shrink-1 flex-grow-1">
+                        <div class="card-title mb-0 py-1">Client Details</div>
+                    </div>
+                    <div class="col-auto">
+                        {% if laundry.status == '0' %}
+                        <small class="badge badge-secondary bg-gradient bg-secondary px-3 rounded-pill bg-opacity-75 text-sm py-1">Pending</small> {% elif laundry.status == '1' %}
+                        <small class="badge badge-primary bg-gradient bg-primary px-3 rounded-pill bg-opacity-75 text-sm py-1">In-Progress</small> {% elif laundry.status == '2' %}
+                        <small class="badge badge-success bg-gradient bg-success px-3 rounded-pill bg-opacity-75 text-sm py-1">Done</small> {% elif laundry.status == '3' %}
+                        <small class="badge badge-warning bg-gradient bg-warning px-3 rounded-pill bg-opacity-75 text-sm py-1">Picked Up</small> {% else %}
+                        <small class="badge badge-light bg-gradient bg-light px-3 border rounded-pill bg-opacity-75 text-sm py-1">N/A</small> {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid" id="client-details">
+                    {% if laundry.code %}
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label for="" class="control-label">Transaction Code</label>
+                            <div class="h5"><b>{{laundry.code}}</b></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label for="client" class="control-label">Fullname</label>
+                            <div class=""><b>{{laundry.client}}</b></div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label for="contact" class="control-label">Contact #</label>
+                            <div class=""><b>{{laundry.contact}}</b></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card rounded-0 mb-3">
+            <div class="card-header py-1">
+                <div class="card-title mb-0 py-1">Laundries</div>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <table class="table table-bordered" id="laundry_list">
+                        <colgroup>
+                            <col width="40%">
+                            <col width="20%">
+                            <col width="20%">
+                            <col width="20%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="p-1 text-center">Laundry Type</th>
+                                <th class="p-1 text-center">Price per kg.</th>
+                                <th class="p-1 text-center">Weight (kg.)</th>
+                                <th class="p-1 text-center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td class="px-2 py-1 align-middle laundry_type">{{item.laundry_type.laundry_type}}</td>
+                                <td class="px-2 py-1 align-middle text-end laundry_price">{{item.price|floatformat}}</td>
+                                <td class="px-2 py-1 align-middle text-center">{{item.weight|floatformat}}</td>
+                                <td class="px-2 py-1 align-middle laundry_total text-end">{{item.total_amount|floatformat}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th class="text-center" colspan="3">Total</th>
+                                <th class="text-end sub-total-laundry">{{laundry.totalItems|floatformat:2|intcomma}}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card rounded-0 mb-3">
+            <div class="card-header py-1">
+                <div class="card-title mb-0 py-1">Item List</div>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <table class="table table-bordered" id="product_list">
+                        <colgroup>
+                            <col width="40%">
+                            <col width="20%">
+                            <col width="20%">
+                            <col width="20%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="p-1 text-center">Product Name</th>
+                                <th class="p-1 text-center">Unit Price</th>
+                                <th class="p-1 text-center">Quantity</th>
+                                <th class="p-1 text-center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pitem in pitems %}
+                            <tr>
+                                <td class="px-2 py-1 align-middle product_type">{{pitem.product.name}}</td>
+                                <td class="px-2 py-1 align-middle text-end product_price">{{pitem.price|floatformat}}</td>
+                                <td class="px-2 py-1 align-middle text-center">{{pitem.quantity|floatformat}}</td>
+                                <td class="px-2 py-1 align-middle product_total text-end">{{pitem.total_amount|floatformat}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th class="text-center" colspan="3">Total</th>
+                                <th class="text-end sub-total-product">{{laundry.totalProducts|floatformat:2|intcomma}}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card rounded-0 mb-3">
+            <div class="card-body">
+                <div id="payment-details">
+                    <div class="d-flex w-100 justify-content-end align-items-center">
+                        <div class="col-auto">
+                            <h4 class="fw-bolder text-muted pe-2">Grand Total:</h4>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                            <h4 class="fw-bolder pe-2 gtotal">{% if laundry.total_amount %}{{laundry.total_amount|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h4>
+                        </div>
+                    </div>
+                    <div class="d-flex w-100 justify-content-end align-items-center">
+                        <div class="col-auto">
+                            <h4 class="fw-bolder text-muted pe-2">Tendered Amount:</h4>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                            <h4 class="fw-bolder pe-2">{% if laundry.tendered %}{{laundry.tendered|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h4>
+                        </div>
+                    </div>
+                    <div class="d-flex w-100 justify-content-end align-items-center">
+                        <div class="col-auto">
+                            <h4 class="fw-bolder text-muted pe-2">Change:</h4>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-end">
+                            <h4 class="fw-bolder pe-2 " id="change">{% if laundry.change %}{{laundry.change|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer py-1 text-center">
+                <button class="btn btn-primary bg-primary btn-sm rounded-0" id="update-status" type="button">Update Status</button>
+                <a class="btn btn-primary bg-gradient bg-primary btn-sm rounded-0" href="{% url 'manage-laundry-pk' laundry.pk %}"><i class="fa fa-edit"></i> Edit</a>
+                <button class="btn btn-danger bg-gradient bg-danger btn-sm rounded-0" type="button" id="delete-data"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn btn-success bg-gradient bg-success  btn-sm rounded-0" type="button" id="print"><i class="fa fa-print"></i> Print</button>
+                <a class="btn btn-light bg-gradient bg-light border btn-sm rounded-0" href="{% url 'laundry-page' %}"><i class="fa fa-angle-left"></i> Back to List</a>
+            </div>
+        </div>
+    </div>
+</section>
+<noscript id="print-header">
+<div>
+    <style>
+        html{
+            min-height: unset !important;
+        }
+    </style>
+    <div class="d-flex w-100">
+        <div class="col-2 text-center">
+            <img src="{{system_host}}{% static 'assets/default/img/logo.jpg' %}" style="width:4em;height:4em;object-fit:cover;object-position:center center" alt="" class="rounded-circle p-0 img-thumbnail">
+        </div>
+        <div class="col-8">
+            <div class="lh-1">
+                <h4 class="text-center mb-0 fw-bolder">{{system_name}}</h4>
+                <h5 class="text-center mb-0 fw-bolder">Transaction Receipt</h5>
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>
+</noscript> {% endblock pageContent %} {% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#delete-data').click(function() {
+            _conf("Are you sure to delete this Transaction?", 'delete_laundry', ["'" + '{% url "delete-laundry" laundry.pk %}' + "'"])
+        })
+        $('#update-status').click(function() {
+            uni_modal("Updated Transaction's Status", '{% url "transacton-update-status" laundry.pk %}')
+        })
+
+        $('#print').click(function() {
+            var h = $('head').clone()
+            h.find('title').text("Transaction Receipt - Print Details")
+            h.find('link').each(function() {
+                if ($(this).is('[href]')) {
+                    $(this).attr('href', "{{system_host}}" + $(this).attr('href'))
+                }
+            })
+            h.find('script').each(function() {
+                if ($(this).is('[src]')) {
+                    $(this).attr('src', "{{system_host}}" + $(this).attr('src'))
+                }
+            })
+            var ph = $($('noscript#print-header').html()).clone()
+            var el = "";
+            var cdetails = $('#client-details').clone()
+            cdetails.find('.col-lg-6').addClass('col-6')
+            el += cdetails[0].outerHTML
+            el += "<h5>Laundry Items</h5>"
+            el += $('#laundry_list').clone()[0].outerHTML
+            el += "<h5>Product Items</h5>"
+            el += $('#product_list').clone()[0].outerHTML
+            el += $('#payment-details').clone()[0].outerHTML
+
+            var nw = window.open("", "_blank", "width=" + ($(window).width() * .8) + ", left=" + ($(window).width() * .1) + "height=" + ($(window).height() * .8) + ", top=" + ($(window).height() * .1) + "")
+            nw.document.querySelector('head').innerHTML = h.html()
+            nw.document.querySelector('body').innerHTML = ph[0].outerHTML
+            nw.document.querySelector('body').innerHTML += el
+            nw.document.close()
+            start_loader()
+            setTimeout(() => {
+                nw.print()
+                setTimeout(() => {
+                    nw.close()
+                    end_loader()
+                }, 200)
+            }, 300)
+        })
+    })
+
+    function delete_laundry(url) {
+
+        var _this = $('#confirm_modal .modal-body')
+        $('.err-msg').remove();
+        var el = $('<div>')
+        el.addClass("alert alert-danger err-msg")
+        el.hide()
+        start_loader()
+        $.ajax({
+            headers: {
+                "X-CSRFToken": "{{csrf_token}}"
+            },
+            url: url,
+            dataType: 'JSON',
+            error: err => {
+                console.log(err)
+                alert("an error occurred.")
+                end_loader()
+            },
+            success: function(resp) {
+                if (resp.status == 'success') {
+                    location.replace('{% url "laundry-page" %}')
+                } else if (!!resp.msg) {
+                    el.html(resp.msg)
+                    _this.prepend(el)
+                    el.show()
+                } else {
+                    el.html("An error occurred")
+                    _this.prepend(el)
+                    el.show()
+                }
+                end_loader()
+            }
+
+        })
+    }
+</script>
+{% endblock ScriptBlock %}

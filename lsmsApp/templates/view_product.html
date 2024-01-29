@@ -1,0 +1,216 @@
+{% extends 'base.html' %} {% load static %} {% load humanize %} {% block pageContent %}
+<section class="py-4">
+    <div class="container">
+        <div class="card rounded-0 shadow">
+            <div class="card-header py -1">
+                <div class="d-flex w-100 align-items-center">
+                    <div class="card-title mb-0 col-auto flex-shrink-1 flex-grow-1">Product Details</div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary btn-sm rounded-0 bg-gradient bg-primary" type="button" id="manage-product"><i class="fa fa-edit"></i> Edit Details</button>
+                        <button class="btn btn-danger btn-sm rounded-0 bg-gradient bg-danger" type="button" id="delete-product"><i class="fa fa-trash"></i> Delete Product</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid" id="e-details">
+                    <div class="lh-1">
+                        <dl>
+                            <dt>Name</dt>
+                            <dd class="ps-4">{{product.name}}</dd>
+                            <dt>Description</dt>
+                            <dd class="ps-4">{{product.description}}</dd>
+                            <dt>Status</dt>
+                            <dd class="ps-4">
+                                {% if product.status == '1' %}
+                                <span class="badge badge-success bg-gradient bg-success px-3 rounded-pill bg-opacity-75 text-sm py-1">Active</span> {% else %}
+                                <span class="badge badge-secondary bg-gradient bg-secondary px-3 rounded-pill bg-opacity-75 text-sm py-1">Inactive</span> {% endif %}
+                            </dd>
+                            <dt class="h5 fw-bolder">Price</dt>
+                            <dd class="ps-4 h4 fw-bolder">{{product.price|floatformat:2}}</dd>
+                            <dt class="h5 fw-bolder">Available Stock</dt>
+                            <dd class="ps-4 h4 fw-bolder">{{product.available|floatformat}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-0 my-3">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="card rounded-0 shadow">
+                    <div class="card-header py -1">
+                        <div class="d-flex w-100">
+                            <div class="col-auto flex-shrink-1 flex-grow-1">
+                                <div class="card-title mb-0">Stock-In History</div>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-primary btn-sm rounded-0 bg-gradient bg-primary" type="button" id="add_stock"><i class="far fa-plus-square"></i> New Entry</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <table class="table table-stripped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="px-1 py-1 text-center">#</th>
+                                        <th class="px-1 py-1 text-center">Date Added</th>
+                                        <th class="px-1 py-1 text-center">Quantity</th>
+                                        <th class="px-1 py-1 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for stockin in stockins %}
+                                    <tr>
+                                        <td class="px-1 py-1 align-middle text-center">{{ forloop.counter }}</td>
+                                        <td class="px-1 py-1 align-middle">{{ stockin.date_added|date:"F d, Y" }}</td>
+                                        <td class="px-1 py-1 align-middle text-end">{{ stockin.quantity|floatformat|intcomma }}</td>
+                                        <td class="px-1 py-1 align-middle text-center">
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-primary rounded-0 bg-gradient bg-primary edit-si" type="button" data-url="{% url 'manage-stockin-pid-pk' stockin.product_id stockin.id %}" title="Edit Stock-In"><i class="fa fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger rounded-0 bg-gradient bg-danger delete-si" type="button" data-url="{% url 'delete-stockin' stockin.pk %}" title="Delete Stock-In"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="card rounded-0 shadow">
+                    <div class="card-header py -1">
+                        <div class="d-flex w-100">
+                            <div class="col-auto flex-shrink-1 flex-grow-1">
+                                <div class="card-title mb-0">Sale History</div>
+                            </div>
+                            <div class="col-auto">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <table class="table table-stripped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="px-1 py-1 text-center">#</th>
+                                        <th class="px-1 py-1 text-center">Date Added</th>
+                                        <th class="px-1 py-1 text-center">Transaction Code</th>
+                                        <th class="px-1 py-1 text-center">Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for stockout in stockouts %}
+                                    <tr>
+                                        <td class="px-1 py-1 align-middle text-center">{{ forloop.counter }}</td>
+                                        <td class="px-1 py-1 align-middle">{{ stockout.laundry.date_added|date:"F d, Y" }}</td>
+                                        <td class="px-1 py-1 align-middle">
+                                            <a href="{% url 'view-laundry-pk' stockout.laundry.pk %}" target="_blank">{{ stockout.laundry.code }}</a></td>
+                                        <td class="px-1 py-1 align-middle text-end">{{ stockout.quantity|floatformat|intcomma }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock pageContent %} {% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#manage-product').click(function() {
+            uni_modal("<i class='fa fa-edit'></i> Edit Product Details", "{% url 'manage-product-pk' product.pk %}")
+        })
+        $('#add_stock').click(function() {
+            uni_modal("<i class='far fa-plus-square'></i> New Stock Entry", "{% url 'manage-stockin-pid' product.pk  %}")
+        })
+        $('.edit-si').click(function() {
+            uni_modal("<i class='fa fa-edit'></i> Edit Stock Entry Details", $(this).attr('data-url'))
+        })
+        $('.delete-si').click(function() {
+            _conf("Are you sure to delete this Stock Entry?", 'delete_stockin', ["'" + $(this).attr('data-url') + "'"])
+        })
+
+        $('#delete-product').click(function() {
+            _conf("Are you sure to delete this Product?", 'delete_product', ["'" + '{% url "delete-product" product.pk %}' + "'"])
+        })
+    })
+
+    function delete_stockin(url) {
+
+        var _this = $('#confirm_modal .modal-body')
+        $('.err-msg').remove();
+        var el = $('<div>')
+        el.addClass("alert alert-danger err-msg")
+        el.hide()
+        start_loader()
+        $.ajax({
+            headers: {
+                "X-CSRFToken": "{{csrf_token}}"
+            },
+            url: url,
+            dataType: 'JSON',
+            error: err => {
+                console.log(err)
+                alert("an error occurred.")
+                end_loader()
+            },
+            success: function(resp) {
+                if (resp.status == 'success') {
+                    location.reload()
+                } else if (!!resp.msg) {
+                    el.html(resp.msg)
+                    _this.prepend(el)
+                    el.show()
+                } else {
+                    el.html("An error occurred")
+                    _this.prepend(el)
+                    el.show()
+                }
+                end_loader()
+            }
+
+        })
+    }
+
+    function delete_product(url) {
+        var _this = $('#confirm_modal .modal-body')
+        $('.err-msg').remove();
+        var el = $('<div>')
+        el.addClass("alert alert-danger err-msg")
+        el.hide()
+        start_loader()
+        $.ajax({
+            headers: {
+                "X-CSRFToken": "{{csrf_token}}"
+            },
+            url: url,
+            dataType: 'JSON',
+            error: err => {
+                console.log(err)
+                alert("an error occurred.")
+                end_loader()
+            },
+            success: function(resp) {
+                if (resp.status == 'success') {
+                    location.replace("{% url 'product-page' %}")
+                } else if (!!resp.msg) {
+                    el.html(resp.msg)
+                    _this.prepend(el)
+                    el.show()
+                } else {
+                    el.html("An error occurred")
+                    _this.prepend(el)
+                    el.show()
+                }
+                end_loader()
+            }
+
+        })
+    }
+</script>
+{% endblock ScriptBlock %}
