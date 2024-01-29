@@ -16,16 +16,18 @@
         #uni_modal .modal-sub-footer{
             display:none;
         }
+
+    
     </style>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient fixed-top shadow border-bottom">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 fixed-top shadow border-bottom">
         <div class="container">
             <!-- Navbar brand -->
-            <a class="navbar-brand" target="_blank" href="./">
+            <!-- <a class="navbar-brand" target="_blank" href="./">
                 {% comment %} <img src="{{ MEDIA_URL }}/default/logo.png" height="16" alt="{{ MEDIA_URL }}" loading="lazy" class="bg-white bg-gradient px-1 py-1" style="margin-top: -3px;" /> {% endcomment %}
                 <b>{{system_short_name}}</b>
-            </a>
+            </a> -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarExample01" aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
@@ -33,23 +35,23 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="topNav">
                     {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'home-page' %}">Home</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'home-page' %}" style="color: white;" >Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'price-page' %}">Laundry Type</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'price-page' %}" style="color: white;" >Laundry Type</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'product-page' %}">Product List</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'product-page' %}" style="color: white;" >Product List</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'laundry-page' %}">Transactions</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'laundry-page' %}" style="color: white;" >Transactions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'daily-report' %}">Daily Report</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'daily-report' %}" style="color: white;" >Daily Report</a>
                     </li>
                     {% if request.user.is_superuser %}
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'user-page' %}">Users</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'user-page' %}" style="color: white;">Users</a>
                     </li>
                     {% endif %}
                     {% endif %}
@@ -58,14 +60,14 @@
                 <ul class="navbar-nav">
                     {% if user.id %}
                     <li class="nav-item">
-                        <a class="nav-link"  href="{% url 'profile-page' %}"><b>Howdy, {{user.username}}</b></a>
+                        <a class="nav-link"  href="{% url 'profile-page' %}" style="color: white;"><i class="fa fa-user"></i><b>{{user.username}}</b></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'logout' %}">Logout</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'logout' %}" style="color: white;">Logout</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'login-page' %}">Login</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'login-page' %}" style="color: white;">Login</a>
                     </li>
                     {% endif %}
                 </ul>
