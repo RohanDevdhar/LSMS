@@ -1,11 +1,11 @@
 {% extends 'base.html' %} {% load static %} {% block pageContent %}
 <section class="py-4">
-    <div class="container">
+    <div class="container" style="color: white;">
         <h3 class="fw-bolder text-center" style="color: white;">List of Users</h3>
         <center>
             <hr class="bg-primary opacity-100" style="height:3px" width="5%">
         </center>
-        <div class="card rounded-0 shadow">
+        <div class="card rounded-0 shadow bg-dark bg-opacity-75">
             <div class="card-body">
                 <div class="container-fluid">
                     <div class="text-end mb-3">
@@ -18,7 +18,7 @@
                             <col width="30%">
                             <col width="15%">
                         </colgroup>
-                        <thead>
+                        <thead style="color: white;">
                             <tr>
                                 <th class="text-center">#</th>
                                 <th class="text-center">Name</th>
@@ -28,10 +28,10 @@
                         </thead>
                         <tbody>
                             {% for user in users %}
-                            <tr>
-                                <td class="text-center">{{ forloop.counter }}</td>
-                                <td>{{ user.first_name}} {{ user.last_name}}</td>
-                                <td>{{ user.username}}</td>
+                            <tr >
+                                <td style="color: white;" class="text-center">{{ forloop.counter }}</td>
+                                <td style="color: white;">{{ user.first_name}} {{ user.last_name}}</td>
+                                <td style="color: white;">{{ user.username}}</td>
                                 <td class="text-center">
                                     <div class="dropdown">
                                         <button class="btn btn-light btn-sm rounded-0 border dropdown-toggle" type="button" id="abtn{{user.pk}}" data-bs-toggle="dropdown" aria-expanded="false">

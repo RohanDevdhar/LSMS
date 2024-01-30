@@ -1,15 +1,15 @@
 {% extends 'base.html' %} {% load static %} {% load humanize %} {% block pageContent %}
-<section class="py-4">
+<section class="py-4" style="color: white;">
     <div class="container">
         <h3 class="fw-bolder text-center" style="color: white;">Daily Transaction Report</h3>
         <center>
             <hr class="bg-primary opacity-100" style="height:3px" width="5%">
         </center>
-        <div class="card rounded-0 mb-3">
-            <div class="card-header py-1">
+        <div class="card rounded-0 mb-3 bg-dark bg-opacity-75">
+            <div class="card-header py-1"> 
                 <div class="card-title mb-0">Filter Report</div>
             </div>
-            <div class="card-body">
+            <div class="card-body bg-opacity-75">
                 <form action="" id="filter-form">
                     <div class="row align-items-end">
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -28,7 +28,7 @@
                 </form>
             </div>
         </div>
-        <div class="card rounded-0 shadow">
+        <div class="card rounded-0 shadow bg-dark bg-opacity-75" style="color: white;">
             <div class="card-body">
                 <div class="container-fluid">
                     <table class="table table-bordered table-striped" id="laundry-tbl">
@@ -39,7 +39,7 @@
                             <col width="30%">
                             <col width="20%">
                         </colgroup>
-                        <thead>
+                        <thead style="color: white;">
                             <tr>
                                 <th class="text-center">#</th>
                                 <th class="text-center">Date Added</th>
@@ -68,12 +68,12 @@
                             </tr>
                             {% endfor %} {% if not laundries %}
                             <tr>
-                                <th class="text-center" colspan="5">No records found.</th>
+                                <th style="color: white;"class="text-center" colspan="5">No records found.</th>
                             </tr>
                             {% endif %}
                         </tbody>
                         <tfoot>
-                            <tr>
+                            <tr style="color: white;">
                                 <th colspan="4" class="text-center">Total Sales</th>
                                 <th class="text-end fw-bolder">{{grand_total|floatformat:2|intcomma}}</th>
                             </tr>
